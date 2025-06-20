@@ -81,7 +81,7 @@ Shader "PeerPlay/Raymarching"
             float3 rotatedPos = rotateAroundAxis(position, float3(0,1,0), _Time.x*10); // Rotate the position around the Y-axis)
 
              float sp1 = sdSphere(position-pos,2.0);
-             sp1 = sS(sp1,sdBox(rotatedPos-pos,float3(10,0.5,0.5)),0.6); 
+             sp1 = smin(sp1,sdBox(rotatedPos-pos,float3(10,0.5,0.5)),0.6); 
              float sp2 = sdBox(position, float3(2.0,2.0,2.0));
              float box = sdPlane(position,float3(0,1,0),+5);
              float minv = remap(sin(_Time.x*20),-1,1,0.01,0.5);
@@ -92,13 +92,14 @@ Shader "PeerPlay/Raymarching"
             
             float signedDistanceFunction(float3 position)
             {
-             // position = abs(position)%2-1;
+             position = abs(position)%2-1;
              float s1 = sdSphere(position,0.3);
              float sf =remap(sin(_Time.x*10),-1,1,0.01,0.1);
              //float3 rotatedPos = rotateAroundAxis(position, float3(0,1,0), _Time.x*10); // Rotate the position around the Y-axis)
              float s2 = sdBox(position,float3(0.5,0.1,0.1));
              
-             float box = smin(s1,s2,sf);
+             //float box = smin(s1,s2,sf);
+             float box = min(s1,s2);
              return box; // Use the union operation to combine the two spheres)
 
             }
@@ -173,8 +174,8 @@ Shader "PeerPlay/Raymarching"
                 shadow=max(0.0,pow(shadow,_ShadowIntensity));
                 float ao = ambientOcclusion(position, normal);
 
-                return lambert*shadow;
-                //return ao;
+                //return lambert*shadow*ao;
+                return ao;
             }
 
             fixed4 rayMarching(float3 rayOrigin, float3 rayDirection)

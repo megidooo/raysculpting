@@ -82,7 +82,7 @@ float smax(float a, float b, float k)
     return -smin(-a, -b, k);
 }
 
-float sS(float a, float b, float k)
+float sminopS(float a, float b, float k)
 {
     return smax(a, -b, k); // use smoothMax if you implement it similarly
 }
