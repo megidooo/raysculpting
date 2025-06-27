@@ -72,19 +72,34 @@ Shader "PeerPlay/Raymarching"
 
             
             
+            float signedDistanceFunction2(float3 position)
+            {
+                //position = position*2;
+            //position= addNoise(position,0.5,3); // Add noise to the position for more organic shapes
+            float time= remap(sin(_Time.x*10),-1,1,-2,2);
+            float3 pos = float3(0,2.5+time,0);
+            //position = position%10.0-5; // Wrap position to a smaller range for simplicity)
+            float3 rotatedPos = rotateAroundAxis(position, float3(0,1,0), _Time.x*10); // Rotate the position around the Y-axis)
+
+             float sp1 = sdSphere(position-pos,2.0);
+             sp1 = smin(sp1,sdBox(rotatedPos-pos,float3(10,0.5,0.5)),0.6); 
+             float sp2 = sdBox(position, float3(2.0,2.0,2.0));
+             float box = sdPlane(position,float3(0,1,0),+5);
+             float minv = remap(sin(_Time.x*20),-1,1,0.01,0.5);
+             //return smin(sp1,sp2,0.2);
+             return min(smin(sp1, sp2,minv),box); // Use the union operation to combine the two spheres)
+
+            }
+            
             float signedDistanceFunction(float3 position)
             {
-             //position = abs(position)%2-1;
+             position = abs(position)%2-1;
              float s1 = sdSphere(position,0.3);
-             float sf =remap(sin(_Time.x*10),-1,1,0.01,5);
+             float sf =remap(sin(_Time.x*10),-1,1,0.01,0.1);
              //float3 rotatedPos = rotateAroundAxis(position, float3(0,1,0), _Time.x*10); // Rotate the position around the Y-axis)
              float s2 = sdBox(position,float3(0.5,0.1,0.1));
              
-             float noiseDisplace = remap(noise(position*_Debug),0,1,-0.1,0.1);
-                
-
-
-             float box = smin(s1,s2,0.1)+noiseDisplace*sf;
+             float box = smin(s1,s2,0.1);
              //float box = min(s1,s2);
              return box; // Use the union operation to combine the two spheres)
 
@@ -103,7 +118,20 @@ Shader "PeerPlay/Raymarching"
                 return normalize(n);
 
                 }
-           
+            float hardShadows(float3 rayOrigin, float3 rayDirection, float mint, float maxt)
+            {
+               for (float t = mint; t < maxt;)
+                {
+                    float3 position = rayOrigin + rayDirection * t;
+                    float distance = signedDistanceFunction(position);
+                    if (distance < 0.001) // If we hit an object
+                    {
+                        return 0.0; // Shadow
+                    }
+                    t+=distance;
+                }
+                return 1.0; // No shadow
+            }
 
             float softShadows(float3 rayOrigin, float3 rayDirection, float mint, float maxt, float blur)
             {
@@ -122,7 +150,20 @@ Shader "PeerPlay/Raymarching"
                 return result; // No shadow
             }
 
-            
+            float ambientOcclusion(float3 position, float3 normal)
+            {
+                float step =_AOStepSize;
+                float ao =0.0;
+                float distance;
+
+                for (int i = 1; i < _AOIterations; i++)
+                {
+                    distance = step*i;
+                    ao+= max(0.0,(distance - signedDistanceFunction(position + normal*distance))/distance);
+                    
+                }
+                return(1.0-ao*_AOIntensity);
+            }
 
             float shading(float3 position, float3 normal)
             {
@@ -132,11 +173,11 @@ Shader "PeerPlay/Raymarching"
 
                 float shadow = softShadows(position, -_Light, _ShadowDistance.x,_ShadowDistance.y,_ShadowDistance.z)*0.5+0.5;
                 shadow=max(0.0,pow(shadow,_ShadowIntensity));
-                
+                float ao = ambientOcclusion(position, normal);
                 float noisee = noise(position*_Debug);
 
-                return lambert*shadow;
-                
+                return lambert*shadow*noisee;
+                //return ao;
             }
 
             fixed4 rayMarching(float3 rayOrigin, float3 rayDirection)

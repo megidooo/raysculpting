@@ -1769,6 +1769,7 @@ MonoBehaviour:
   AOIterations: 3.06
   maxIterations: 200
   stepSize: 0.001
+  debug: 0
   _rayMarchShader: {fileID: 4800000, guid: 19c24f2af6d71644c96963199cc581d1, type: 3}
 --- !u!1 &380297312
 GameObject:
@@ -2414,6 +2415,7 @@ MonoBehaviour:
   AOIterations: 3.06
   maxIterations: 200
   stepSize: 0.001
+  debug: 0
   _rayMarchShader: {fileID: 4800000, guid: 19c24f2af6d71644c96963199cc581d1, type: 3}
 --- !u!1 &437902113
 GameObject:
@@ -8040,6 +8042,7 @@ MonoBehaviour:
   AOIterations: 3.06
   maxIterations: 200
   stepSize: 0.001
+  debug: 0
   _rayMarchShader: {fileID: 4800000, guid: 19c24f2af6d71644c96963199cc581d1, type: 3}
 --- !u!1 &1428449367
 GameObject:
@@ -9817,18 +9820,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 391f63d8e13d5f14d9b0b19e07e05e54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxDistance: 100
-  _MainColor: {r: 0.9254902, g: 0.42298326, b: 0.18823528, a: 1}
+  maxDistance: 692.1
+  _MainColor: {r: 1, g: 1, b: 1, a: 1}
   light: {x: 0.78, y: -1.12, z: -0.73}
-  lightIntensity: 3.9
+  lightIntensity: 0.86
   lightColor: {r: 1, g: 1, b: 1, a: 1}
-  ShadowDistance: {x: 0.53, y: 96, z: 2.9}
-  shadowIntensity: 5.56
-  AOIntensity: 0.13
+  ShadowDistance: {x: 1.35, y: 1999, z: 3.5}
+  shadowIntensity: 7.26
+  AOIntensity: -3.2
   AOStepSize: 0.08
   AOIterations: 3.06
-  maxIterations: 306
-  stepSize: 0.001
+  maxIterations: 100
+  stepSize: 0.002
+  debug: 6.4
   _rayMarchShader: {fileID: 4800000, guid: 19c24f2af6d71644c96963199cc581d1, type: 3}
 --- !u!81 &1766112891
 AudioListener:
@@ -9871,7 +9875,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60
+  field of view: 94
   orthographic: 0
   orthographic size: 5
   m_Depth: 0
@@ -9897,8 +9901,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1766112889}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.014997768, y: -0.012904884, z: 0.00019352355, w: -0.9998042}
-  m_LocalPosition: {x: -0.038864724, y: 0.38384962, z: -1.7856026}
+  m_LocalRotation: {x: 0.20242041, y: -0.6960353, z: 0.21530879, w: 0.6543722}
+  m_LocalPosition: {x: 1.2993994, y: 0.27640682, z: 0.40215924}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

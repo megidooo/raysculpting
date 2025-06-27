@@ -15,13 +15,16 @@ public class RayMarchCam : MonoBehaviour
     public Vector3 ShadowDistance;
     public float shadowIntensity;
 
+
     public float AOIntensity = 0.5f; // Ambient Occlusion intensity, not used in the shader but can be useful for other calculations
     public float AOStepSize = 0.1f; // Ambient Occlusion step size, not used in the shader but can be useful for other calculations
     public float AOIterations = 5; // Ambient Occlusion iterations, not used in the shader but can be useful for other calculations
 
+  
+
     public int maxIterations = 200;
     public float stepSize = 0.001f; // Step size for ray marching
-
+    public float debug = 1.0f; // Debug mode, not used in the shader but can be useful for other calculations
     [SerializeField]
     private Shader _rayMarchShader;
 
@@ -84,6 +87,7 @@ public class RayMarchCam : MonoBehaviour
         _rayMarchMaterial.SetVector("_CamPos", _cam.transform.position);
         _rayMarchMaterial.SetInt("_MaxIterations", maxIterations);
         _rayMarchMaterial.SetFloat("_StepSize", stepSize);
+        _rayMarchMaterial.SetFloat("_Debug", debug);
 
         RenderTexture.active = destination;
         GL.PushMatrix();
